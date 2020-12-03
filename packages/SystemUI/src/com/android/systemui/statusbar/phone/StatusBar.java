@@ -2062,6 +2062,7 @@ public class StatusBar extends SystemUI implements DemoMode,
                     uri.equals(Settings.System.getUriFor(Settings.System.QS_COLUMNS_LANDSCAPE))) {
                 setQsRowsColumns();
             }
+	}
 
         public void update() {
             setQsRowsColumns();
