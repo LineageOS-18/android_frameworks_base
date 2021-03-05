@@ -187,7 +187,7 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
     private static final long SCREENSHOT_DISMISS_ALPHA_OFFSET_MS = 50; // delay before starting fade
     private static final float SCREENSHOT_ACTIONS_START_SCALE_X = .7f;
     private static final float ROUNDED_CORNER_RADIUS = .05f;
-    private static final int SCREENSHOT_CORNER_DEFAULT_TIMEOUT_MILLIS = 6000;
+    private static final int SCREENSHOT_CORNER_DEFAULT_TIMEOUT_MILLIS = 2000;
     private static final int MESSAGE_CORNER_TIMEOUT = 2;
 
     private final Interpolator mAccelerateInterpolator = new AccelerateInterpolator();
@@ -1075,6 +1075,18 @@ public class GlobalScreenshot implements ViewTreeObserver.OnComputeInternalInset
         });
         mActionsView.addView(editChip);
         chips.add(editChip);
+
+        ScreenshotActionChip deleteChip = (ScreenshotActionChip) inflater.inflate(
+                R.layout.global_screenshot_action_chip, mActionsView, false);
+        deleteChip.setText(imageData.deleteAction.title);
+        deleteChip.setIcon(imageData.deleteAction.getIcon(), true);
+        deleteChip.setPendingIntent(imageData.deleteAction.actionIntent, () -> {
+            mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_DELETE_TAPPED);
+            dismissScreenshot("chip tapped", false);
+            mOnCompleteRunnable.run();
+        });
+        mActionsView.addView(deleteChip);
+        chips.add(deleteChip);
 
         mScreenshotPreview.setOnClickListener(v -> {
             try {
